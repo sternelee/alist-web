@@ -13,6 +13,7 @@ export interface User {
   permission: number
   sso_id: string
   disabled: boolean
+  email: string
   // otp: boolean;
 }
 

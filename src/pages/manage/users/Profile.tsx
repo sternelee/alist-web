@@ -43,6 +43,7 @@ const Profile = () => {
   useManageTitle("manage.sidemenu.profile")
   const { searchParams, to } = useRouter()
   const [username, setUsername] = createSignal(me().username)
+  const [email, setEmail] = createSignal(me().email)
   const [password, setPassword] = createSignal("")
   const [confirmPassword, setConfirmPassword] = createSignal("")
   const usecompatibility = getSettingBool("sso_compatibility_mode")
@@ -50,6 +51,7 @@ const Profile = () => {
     (ssoID?: boolean): PEmptyResp =>
       r.post("/me/update", {
         username: ssoID ? me().username : username(),
+        email: ssoID ? me().email : email(),
         password: ssoID ? "" : password(),
         sso_id: me().sso_id,
       }),
@@ -93,7 +95,7 @@ const Profile = () => {
     }
     const resp = await save(ssoID)
     handleResp(resp, () => {
-      setMe({ ...me(), username: username() })
+      setMe({ ...me(), username: username(), email: email() })
       if (!ssoID) {
         notify.success(t("users.update_profile_success"))
         to(`/@login?redirect=${encodeURIComponent(location.pathname)}`)
@@ -171,6 +173,16 @@ const Profile = () => {
               value={username()}
               onInput={(e) => {
                 setUsername(e.currentTarget.value)
+              }}
+            />
+          </FormControl>
+          <FormControl>
+            <FormLabel for="email">{t("users.change_email")}</FormLabel>
+            <Input
+              id="email"
+              value={email()}
+              onInput={(e) => {
+                setEmail(e.currentTarget.value)
               }}
             />
           </FormControl>
